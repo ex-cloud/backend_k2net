@@ -10,10 +10,21 @@ class CategoryResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @return array<string, mixed>
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
      */
-    public function toArray(Request $request): array
+    public function toArray($request): array
     {
-        return parent::toArray($request);
+        return [
+            'id'          => $this->id,
+            'image'       => $this->image,
+            'name'        => $this->name,
+            'slug'        => $this->slug,
+            'description' => $this->description,
+            'is_active'   => $this->is_active,
+            'is_featured' => $this->is_featured,
+            'created_by'  => auth()->user() ? auth()->user()->name : $this->created_by,
+            'created_at'  => new DateResource($this->created_at),
+        ];
     }
 }

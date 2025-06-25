@@ -85,7 +85,6 @@ class TagController extends Controller
             'name' => $request->name,
             'slug' => Str::slug($request->name),
             'description' => $request->description,
-            'updated_by' => auth()->user()->id,
         ]);
 
         if (!$updated) {

@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class TagCollection extends ResourceCollection
+class CategoryCollection extends ResourceCollection
 {
     public $status;
     public $message;
@@ -21,13 +21,16 @@ class TagCollection extends ResourceCollection
         return [
             'success' => $this->status,
             'message' => $this->message,
-            'data' => $this->collection->transform(function ($tag) {
+            'data' => $this->collection->transform(function ($categories) {
                 return [
-                    'id' => $tag->id,
-                    'name' => $tag->name,
-                    'slug' => $tag->slug,
-                    'description' => $tag->description,
-                    'created' => new DateResource($tag->created_at),
+                    'id' => $categories->id,
+                    'name' => $categories->name,
+                    'slug' => $categories->slug,
+                    'image' => $categories->image,
+                    'is_active' => $categories->is_active,
+                    'is_featured' => $categories->is_featured,
+                    'description' => $categories->description,
+                    'created' => new DateResource($categories->created_at),
                 ];
             }),
             'meta' => [

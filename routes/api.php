@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\Admin\CategoryController;
 use App\Http\Controllers\Api\V1\Admin\LoginController;
 use App\Http\Controllers\Api\V1\Admin\TagController;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,9 @@ Route::prefix('v1')->group(function () {
 
             //Tags
             Route::apiResource('/tags', TagController::class);
+
+            //Category
+            Route::apiResource('/categories', CategoryController::class);
         });
     });
 
