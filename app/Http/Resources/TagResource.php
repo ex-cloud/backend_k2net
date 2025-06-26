@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\DateResource;
 
 final class TagResource extends JsonResource
 {
@@ -21,8 +22,7 @@ final class TagResource extends JsonResource
             'name'        => $this->name,
             'slug'        => $this->slug,
             'description' => $this->description,
-            'created_by'  => auth()->user() ? auth()->user()->name : $this->created_by,
-            // 'updated_by'  => auth()->user() ? auth()->user()->name : $this->updated_by,
+            'created_by'  => $this->created_by,
             'created_at'  => new DateResource($this->created_at),
         ];
     }

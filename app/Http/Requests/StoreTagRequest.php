@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreTagRequest extends FormRequest
 {
@@ -16,6 +17,11 @@ class StoreTagRequest extends FormRequest
     {
         return [
             'name' => 'required|string|unique:tags,name',
+            'slug' => [
+                'nullable', // agar bisa kosong dan dibuat otomatis
+                'string',
+                Rule::unique('posts', 'slug'),
+            ],
         ];
     }
 

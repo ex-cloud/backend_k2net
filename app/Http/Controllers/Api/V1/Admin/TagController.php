@@ -8,10 +8,13 @@ use App\Http\Requests\UpdateTagRequest;
 use App\Http\Resources\TagCollection;
 use App\Http\Resources\TagResource;
 use App\Models\Tag;
+use App\Traits\HasSlugAndImage;
 use Str;
 
 class TagController extends Controller
 {
+    use HasSlugAndImage;
+
     /**
      * Display a listing of the resource.
      *
@@ -36,9 +39,11 @@ class TagController extends Controller
      */
     public function store(StoreTagRequest $request)
     {
+        $slug = $this->generateSlug($request->slug, $request->name);
+
         $tag = Tag::create([
             'name' => $request->name,
-            'slug' => Str::slug($request->name, '-'),
+            'slug' => $slug,
         ]);
 
         return response()->json([
@@ -81,9 +86,11 @@ class TagController extends Controller
      */
     public function update(UpdateTagRequest $request, Tag $tag)
     {
+        $slug = $this->generateSlug($request->slug, $request->name);
+
         $updated = $tag->update([
             'name' => $request->name,
-            'slug' => Str::slug($request->name),
+            'slug' => $slug,
             'description' => $request->description,
         ]);
 

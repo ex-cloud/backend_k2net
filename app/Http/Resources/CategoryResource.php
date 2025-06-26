@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\DateResource;
 
 class CategoryResource extends JsonResource
 {
@@ -17,13 +18,13 @@ class CategoryResource extends JsonResource
     {
         return [
             'id'          => $this->id,
-            'image'       => $this->image,
+            'image'       => $this->image ? asset('storage/categories/' . $this->image) : null,
             'name'        => $this->name,
             'slug'        => $this->slug,
             'description' => $this->description,
             'is_active'   => $this->is_active,
             'is_featured' => $this->is_featured,
-            'created_by'  => auth()->user() ? auth()->user()->name : $this->created_by,
+            'created_by' => $this->user->name ?? 'System',
             'created_at'  => new DateResource($this->created_at),
         ];
     }

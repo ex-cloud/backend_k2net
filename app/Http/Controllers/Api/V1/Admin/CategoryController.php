@@ -9,12 +9,16 @@ use App\Http\Requests\UpdateCategoryRequest;
 use App\Http\Resources\CategoryCollection;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
+use App\Traits\HasSlugAndImage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
-use Str;
 
 class CategoryController extends Controller
 {
+    use HasSlugAndImage;
+
     /**
      * Display a listing of the resource.
      *
@@ -26,6 +30,7 @@ class CategoryController extends Controller
         $categories = Category::when(request()->q, function ($categories) {
             $categories = $categories->where('name', 'like', '%' . request()->q . '%');
         })->latest()->paginate(5);
+
         return new CategoryCollection($categories);
     }
 
@@ -33,30 +38,26 @@ class CategoryController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\JsonResource
+     * @return \Illuminate\Http\JsonResponse
      */
 
     public function store(StoreCategoryRequest $request)
     {
-        $image = $request->file('image');
-        $image->storeAs('categories', $image->hashName(), 'public');
-        if (!$image) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Gagal mengunggah gambar kategori!',
-            ], 422);
-        }
-        $category = Category::create([
-            'name' => $request->name,
-            'slug' => Str::slug($request->name, '-'),
-            'image' => $image->hashName(),
-        ]);
-        $category->image = $image->hashName();
-
-        $category->save();
+        $slug = $this->generateSlug($request->slug, $request->name);
+        $imageName = $this->storeImage($request->file('image'), 'categories');
+        $category = Category::create(
+            [
+                'name'        => $request->name,
+                'slug'        => $slug,
+                'image'       => $imageName,
+                'description' => $request->description,
+                'is_active'   => $request->is_active ?? true,
+                'is_featured' => $request->is_featured ?? false,
+                'created_by'  => auth()->id(),
+            ]);
 
         return response()->json([
-            'success' => true,
+            'status' => true,
             'message' => 'Data Category Berhasil Disimpan!',
             'data' => new CategoryResource($category)
         ]);
@@ -66,7 +67,7 @@ class CategoryController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\JsonResource
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
     {
@@ -74,14 +75,14 @@ class CategoryController extends Controller
 
         if (!$category) {
             return response()->json([
-                'success' => false,
+                'status' => false,
                 'message' => 'Detail Data Category Tidak Ditemukan!',
                 'data' => null,
             ], 404);
         }
 
         return response()->json([
-            'success' => true,
+            'status' => true,
             'message' => 'Detail Data Category!',
             'data' => new CategoryResource($category),
         ]);
@@ -91,45 +92,44 @@ class CategoryController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\JsonResource
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(UpdateCategoryRequest $request, Category $category)
     {
-        //check image update
-        if ($request->file('image')) {
+        $slug = $this->generateSlug($request->slug, $request->name);
+        $data = [
+            'name'        => $request->name,
+            'slug'        => $slug,
+            'description' => $request->description,
+            'is_active'   => $request->is_active ?? $category->is_active,
+            'is_featured' => $request->is_featured ?? $category->is_featured,
+        ];
 
-            //remove old image
-            Storage::disk('public')->delete('categories/' . basename($category->image));
+        if ($request->hasFile('image')) {
+            // Hapus gambar lama jika ada
+            if ($category->image && Storage::disk('public')->exists('categories/' . $category->image)) {
+                Storage::disk('public')->delete('categories/' . $category->image);
+            }
 
-            //upload new image
+            // Upload gambar baru
             $image = $request->file('image');
             $image->storeAs('categories', $image->hashName(), 'public');
 
-            //update category with new image
-            $category->update([
-                'image' => $image->hashName(),
-                'name' => $request->name,
-                'slug' => Str::slug($request->name, '-'),
-            ]);
+            $data['image'] = $image->hashName();
         }
 
-        //update category without image
-        $updated = $category->update([
-            'name' => $request->name,
-            'slug' => Str::slug($request->name, '-'),
-            'description' => $request->description,
-        ]);
+        $updated = $category->update($data);
 
         if (!$updated) {
             return response()->json([
-                'success' => false,
+                'status' => false,
                 'message' => 'Data Category Gagal Diupdate!',
                 'data' => null,
             ], 500);
         }
 
         return response()->json([
-            'success' => true,
+            'status' => true,
             'message' => 'Data Category Berhasil Diupdate!',
             'data' => new CategoryResource($category),
         ]);
@@ -139,25 +139,35 @@ class CategoryController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\JsonResource
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(Category $category)
     {
-        //remove image
-        Storage::disk('public')->delete('categories/' . basename($category->image));
-        
-        $deleted = $category->delete();
+        try {
+            if ($category->image && Storage::disk('public')->exists('categories/' . $category->image)) {
+                Storage::disk('public')->delete('categories/' . $category->image);
+            }
 
-        if (!$deleted) {
+            $deleted = $category->delete();
+
+            if (!$deleted) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data Category Gagal Dihapus!',
+                ], 500);
+            }
+
             return response()->json([
-                'success' => false,
-                'message' => 'Data Category Gagal Dihapus!',
+                'status' => true,
+                'message' => 'Data Category Berhasil Dihapus!',
+            ]);
+        } catch (\Throwable $th) {
+            Log::error('Gagal menghapus kategori: ' . $th->getMessage());
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Terjadi kesalahan saat menghapus kategori.',
             ], 500);
         }
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Data Category Berhasil Dihapus!',
-        ]);
     }
 }

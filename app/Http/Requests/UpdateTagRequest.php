@@ -23,7 +23,7 @@ class UpdateTagRequest extends FormRequest
 
         return [
             'name' => [
-                'required',
+                'nullable',
                 'string',
                 Rule::unique('tags', 'name')->ignore($tagId),
             ],

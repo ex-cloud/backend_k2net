@@ -39,7 +39,7 @@ final class LoginController extends BaseController
 
         // response login "success"
         return response()->json([
-            'success' => true,
+            'status' => true,
             'message' => 'Login success',
             'data' => [
                 'user' => auth()->guard('api')->user(),
@@ -58,7 +58,7 @@ final class LoginController extends BaseController
     {
         //response data "user" yang sedang login
         return response()->json([
-            'success' => true,
+            'status' => true,
             'user'    => auth()->guard('api')->user()
         ], 200);
 
@@ -75,7 +75,7 @@ final class LoginController extends BaseController
 
         if (!$token) {
             return response()->json([
-                'success' => false,
+                'status' => false,
                 'message' => 'Token not provided or expired',
             ], 401);
         }
@@ -91,7 +91,7 @@ final class LoginController extends BaseController
 
         //response data "user" dengan "token" baru
         return response()->json([
-            'success' => true,
+            'status' => true,
             'user'    => $user,
             'token'   => $refreshToken,
         ], 200);
@@ -108,12 +108,12 @@ final class LoginController extends BaseController
             JWTAuth::invalidate(JWTAuth::getToken());
 
             return response()->json([
-                'success' => true,
+                'status' => true,
                 'message' => 'Logout successful',
             ], 200);
         } catch (JWTException $e) {
             return response()->json([
-                'success' => false,
+                'status' => false,
                 'message' => 'Failed to logout, token might be invalid or expired',
             ], 401);
         }

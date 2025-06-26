@@ -2,10 +2,11 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use App\Http\Resources\CategoryResource;
+use App\Http\Resources\PostResource;
 
-class CategoryCollection extends ResourceCollection
+class PostCollection extends ResourceCollection
 {
     public $status;
     public $message;
@@ -22,13 +23,8 @@ class CategoryCollection extends ResourceCollection
         return [
             'success' => $this->status,
             'message' => $this->message,
-            'data'    => CategoryResource::collection($this->collection),
-            'meta' => [
-                'current_page' => $this->resource->currentPage(),
-                'last_page' => $this->resource->lastPage(),
-                'per_page' => $this->resource->perPage(),
-                'total' => $this->resource->total(),
-            ],
+            'data' => PostResource::collection($this->collection),
+            'meta' => optional($this->resource instanceof \Illuminate\Pagination\LengthAwarePaginator ? $this->resource : null)?->toArray(),
         ];
     }
 }

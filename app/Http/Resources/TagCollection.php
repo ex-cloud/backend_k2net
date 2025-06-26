@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Http\Resources\TagResource;
 
 class TagCollection extends ResourceCollection
 {
@@ -21,15 +22,7 @@ class TagCollection extends ResourceCollection
         return [
             'success' => $this->status,
             'message' => $this->message,
-            'data' => $this->collection->transform(function ($tag) {
-                return [
-                    'id' => $tag->id,
-                    'name' => $tag->name,
-                    'slug' => $tag->slug,
-                    'description' => $tag->description,
-                    'created' => new DateResource($tag->created_at),
-                ];
-            }),
+            'data' => TagResource::collection($this->collection),
             'meta' => [
                 'current_page' => $this->currentPage(),
                 'last_page' => $this->lastPage(),

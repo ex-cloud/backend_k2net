@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreCategoryRequest extends FormRequest
 {
@@ -16,7 +17,15 @@ class StoreCategoryRequest extends FormRequest
     {
         return [
             'name' => 'required|string|unique:categories,name',
-            'image'    => 'required|image|mimes:jpeg,jpg,png|max:2000',
+            'slug' => [
+                'nullable', // agar bisa kosong dan dibuat otomatis
+                'string',
+                Rule::unique('posts', 'slug'),
+            ],
+            'image'       => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+            'is_active'   => 'nullable|boolean',
+            'is_featured' => 'nullable|boolean',
+            'description' => 'nullable|string|max:1000',
         ];
     }
 
@@ -25,6 +34,13 @@ class StoreCategoryRequest extends FormRequest
         return [
             'name.required' => 'Nama tag wajib diisi.',
             'name.unique'   => 'Nama tag sudah digunakan.',
+            'slug.unique'   => 'Slug tag sudah digunakan, silakan gunakan yang lain.',
+            'image.image'   => 'File harus berupa gambar.',
+            'image.mimes'   => 'Format gambar harus jpeg, jpg, atau png.',
+            'image.max'     => 'Ukuran gambar maksimal 2MB.',
+            'description.max' => 'Deskripsi maksimal 1000 karakter.',
+            'is_active.boolean' => 'Status aktif harus berupa boolean.',
+            'is_featured.boolean' => 'Status unggulan harus berupa boolean.',
         ];
     }
 }

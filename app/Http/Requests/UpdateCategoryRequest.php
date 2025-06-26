@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Category;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 
 class UpdateCategoryRequest extends FormRequest
@@ -13,10 +13,14 @@ class UpdateCategoryRequest extends FormRequest
         return true;
     }
 
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
     public function rules(): array
     {
         $category = $this->route('category');
-        Log::info('Category in UpdateCategoryRequest:', ['category' => $category]);
 
         $categoryId = $category instanceof Category ? $category->id : $category;
 
@@ -24,14 +28,15 @@ class UpdateCategoryRequest extends FormRequest
             'name' => [
                 'required',
                 'string',
+                'max:255',
                 Rule::unique('categories', 'name')->ignore($categoryId),
             ],
             'slug' => [
-                'required',
+                'nullable',
                 'string',
                 Rule::unique('categories', 'slug')->ignore($categoryId),
             ],
-            'image' => 'nullable|image|mimes:jpeg,jpg,png|max:2000',
+            'image' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048',
             'is_active' => 'nullable|boolean',
             'is_featured' => 'nullable|boolean',
             'description' => 'nullable|string|max:1000',
@@ -41,8 +46,15 @@ class UpdateCategoryRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'Nama category wajib diisi.',
-            'name.unique'   => 'Nama category sudah digunakan.',
+            'name.required' => 'Nama kategori wajib diisi.',
+            'name.unique'   => 'Nama kategori sudah digunakan.',
+            'slug.unique'   => 'Slug kategori sudah digunakan, silakan gunakan yang lain.',
+            'image.image'   => 'File harus berupa gambar.',
+            'image.mimes'   => 'Format gambar harus jpeg, jpg, png, atau webp.',
+            'image.max'     => 'Ukuran gambar maksimal 2MB.',
+            'description.max' => 'Deskripsi maksimal 1000 karakter.',
+            'is_active.boolean' => 'Status aktif harus berupa boolean.',
+            'is_featured.boolean' => 'Status unggulan harus berupa boolean.',
         ];
     }
 }
