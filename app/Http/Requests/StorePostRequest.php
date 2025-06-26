@@ -32,9 +32,25 @@ class StorePostRequest extends FormRequest
             'content'     => 'required|string',
             'image'       => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
             'category_id' => 'required|exists:categories,id',
-            'tags'        => 'nullable|array',
-            'tags.*'      => 'exists:tags,id',
+            'tags'   => 'nullable|array',
+            'tags.*' => 'exists:tags,id',
+            'description' => 'nullable|string|max:1000',
+            'meta_title'  => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string|max:500',
+            'meta_keywords'    => 'nullable|string|max:255',
+            'status' => ['nullable', Rule::in(['draft', 'published', 'archived'])],
+            'published_at' => 'nullable|date',
+            'is_published' => 'nullable|boolean',
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        if ($this->has('tags') && !is_array($this->input('tags'))) {
+            $this->merge([
+                'tags' => [$this->input('tags')]
+            ]);
+        }
     }
 
     /**

@@ -9,8 +9,6 @@ class Post extends Model
 {
     protected $fillable = ['title', 'slug', 'content', 'image', 'description', 'meta_title', 'meta_description', 'meta_keywords', 'status', 'published_at', 'author_id', 'category_id', 'created_by', 'updated_by', 'is_published'];
     protected $casts = [
-        'author_id' => 'integer',
-        'category_id' => 'integer',
         'created_by' => 'integer',
         'updated_by' => 'integer',
         'is_published' => 'boolean',
@@ -53,17 +51,13 @@ class Post extends Model
         );
     }
 
-    protected function createdAt(): Attribute
+    public function getCreatedAtFormattedAttribute(): string
     {
-        return Attribute::make(
-            get: fn($value) => \Carbon\Carbon::locale('id')->parse($value)->translatedFormat('l, d F Y'),
-        );
+        return $this->created_at->locale('id')->translatedFormat('l, d F Y');
     }
 
-    protected function updatedAt(): Attribute
+    public function getUpdatedAtFormattedAttribute(): string
     {
-        return Attribute::make(
-            get: fn($value) => \Carbon\Carbon::locale('id')->parse($value)->translatedFormat('l, d F Y'),
-        );
+        return $this->updated_at->locale('id')->translatedFormat('l, d F Y');
     }
 }

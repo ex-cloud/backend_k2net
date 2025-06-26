@@ -33,6 +33,7 @@ class PostResource extends JsonResource
             'author' => new UserResource($this->whenLoaded('author')),
             'category' => new CategoryResource($this->whenLoaded('category')),
             'created_at'  => new DateResource($this->created_at),
+            'created_at_formatted' => $this->created_at_formatted,
         ];
     }
 }

@@ -45,19 +45,21 @@ class PostController extends Controller
 
 
         $post = Post::create([
-            'title'            => $request->title,
-            'slug'             => $slug,
-            'content'          => $request->content,
-            'image'            => $imageName,
-            'description'      => $request->description,
-            'meta_title'       => $request->meta_title,
+            'title'       => $request->title,
+            'slug'        => $slug,
+            'content'     => $request->content,
+            'image'       => $imageName,
+            'description' => $request->description,
+            'meta_title'  => $request->meta_title,
             'meta_description' => $request->meta_description,
             'meta_keywords'    => $request->meta_keywords,
-            'status'           => $request->status,
-            'published_at'     => $request->published_at,
-            'is_published'     => $request->is_published,
-            'user_id'          => auth()->id(),
-            'category_id'      => $request->category_id,
+            'status'      => $request->status,
+            'published_at' => $request->published_at,
+            'is_published' => $request->is_published,
+            'category_id' => $request->category_id,
+            'author_id'   => auth()->id(),
+            'created_by' => auth()->id(),
+            'updated_by' => auth()->id(),
         ]);
 
         if ($request->filled('tags')) {
@@ -104,12 +106,15 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        $slug = $request->filled('slug') ? $request->slug : Str::slug($request->title);
+        $slug = $this->generateSlug($request->slug, $request->title);
+        $imageName = $this->storeImage($request->file('image'), 'posts');
         // ka menggunakan UUID untuk file name, bisa ganti hashName() dengan Str::uuid() . '.' . $image->getClientOriginalExtension()
         // Data awal
         $data = [
             'title'            => $request->title,
             'slug'             => $slug,
+            'image'            => $imageName ?? $post->image, // Gunakan gambar lama jika tidak ada gambar baru
+            'author_id'        => auth()->id(), // Update author_id jika perlu
             'content'          => $request->content,
             'description'      => $request->description,
             'meta_title'       => $request->meta_title,
