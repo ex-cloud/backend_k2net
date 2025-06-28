@@ -24,7 +24,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::with('user', 'category', 'comments')->when(request()->q, function ($posts) {
+        $posts = Post::with('user', 'category', 'comments', 'tags')->when(request()->q, function ($posts) {
             $posts = $posts->where('title', 'like', '%' . request()->q . '%');
         })->latest()->paginate(5);
 
@@ -81,7 +81,7 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        $post = Post::with(['user', 'category', 'comments'])->find($id);
+        $post = Post::with(['user', 'category', 'comments', 'tags'])->find($id);
 
         if (!$post) {
             return response()->json([

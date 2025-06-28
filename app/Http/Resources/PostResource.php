@@ -29,9 +29,9 @@ class PostResource extends JsonResource
             'published_at' => $this->published_at,
             'is_published' => $this->is_published,
             'created_by' => new UserResource($this->whenLoaded('createdBy')),
-            // 'updated_by' => new UserResource($this->whenLoaded('updatedBy')),
-            'author' => new UserResource($this->whenLoaded('author')),
+            'author' => new UserResource($this->whenLoaded('user')),
             'category' => new CategoryResource($this->whenLoaded('category')),
+            'tags' => TagResource::collection($this->whenLoaded('tags')),
             'created_at'  => new DateResource($this->created_at),
             'created_at_formatted' => $this->created_at_formatted,
         ];
