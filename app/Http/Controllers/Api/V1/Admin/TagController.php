@@ -34,8 +34,8 @@ class TagController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\JsonResource
+     * @param  StoreTagRequest  $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(StoreTagRequest $request)
     {
@@ -57,7 +57,7 @@ class TagController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\JsonResource
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
     {
@@ -81,8 +81,8 @@ class TagController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\JsonResource
+     * @param  UpdateTagRequest  $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(UpdateTagRequest $request, Tag $tag)
     {

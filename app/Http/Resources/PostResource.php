@@ -4,6 +4,10 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\UserResource;
+use App\Http\Resources\CategoryResource;
+use App\Http\Resources\TagResource;
+use App\Http\Resources\DateResource;
 
 class PostResource extends JsonResource
 {

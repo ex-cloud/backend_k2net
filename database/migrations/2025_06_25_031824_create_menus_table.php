@@ -15,6 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('url');
+            $table->string('icon')->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->unsignedBigInteger('parent_id')->nullable();
+            $table->foreign('parent_id')->references('id')->on('menus')->onDelete('cascade');
             $table->timestamps();
         });
     }

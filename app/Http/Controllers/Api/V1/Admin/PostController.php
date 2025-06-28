@@ -35,7 +35,7 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  StorePostRequest  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(StorePostRequest $request)
@@ -101,7 +101,7 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  UpdatePostRequest  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(UpdatePostRequest $request, Post $post)

@@ -4,15 +4,12 @@ namespace App\Http\Controllers\Api\V1\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCategoryRequest;
-use App\Http\Requests\StoreTagRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Http\Resources\CategoryCollection;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use App\Traits\HasSlugAndImage;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
@@ -37,7 +34,7 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  StoreCategoryRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
 
@@ -91,7 +88,7 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  UpdateCategoryRequest  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(UpdateCategoryRequest $request, Category $category)
@@ -160,6 +157,7 @@ class CategoryController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'Data Category Berhasil Dihapus!',
+                'data' => null,
             ]);
         } catch (\Throwable $th) {
             Log::error('Gagal menghapus kategori: ' . $th->getMessage());

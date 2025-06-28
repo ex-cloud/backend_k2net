@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\Admin\CategoryController;
 use App\Http\Controllers\Api\V1\Admin\LoginController;
+use App\Http\Controllers\Api\V1\Admin\MenuController;
 use App\Http\Controllers\Api\V1\Admin\PostController;
 use App\Http\Controllers\Api\V1\Admin\TagController;
 use Illuminate\Support\Facades\Route;
@@ -31,6 +32,9 @@ Route::prefix('v1')->group(function () {
 
             //Posts
             Route::apiResource('/posts', PostController::class);
+
+            // Menus
+            Route::apiResource('/menus', MenuController::class);
         });
     });
 

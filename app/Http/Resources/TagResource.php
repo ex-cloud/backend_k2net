@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\DateResource;
+use Illuminate\Http\Request;
 
 final class TagResource extends JsonResource
 {
@@ -15,7 +16,7 @@ final class TagResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
-    public function toArray($request): array
+    public function toArray(Request $request): array
     {
         return [
             'id'          => $this->id,
