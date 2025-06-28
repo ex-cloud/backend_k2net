@@ -1,18 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreCategoryRequest extends FormRequest
+final class StoreCategoryRequest extends FormRequest
 {
     public function authorize(): bool
     {
         // sesuaikan kalau pakai gate/policy
         return true;
     }
-    
+
     /**
      * Get the validation rules that apply to the request.
      *

@@ -6,7 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Str;
 
-class Tag extends Model
+final class Tag extends Model
 {
     protected $fillable = ['name', 'slug', 'description', 'created_by', 'updated_by'];
     protected $casts = [

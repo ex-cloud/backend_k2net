@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
@@ -9,7 +11,7 @@ use App\Http\Resources\CategoryResource;
 use App\Http\Resources\TagResource;
 use App\Http\Resources\DateResource;
 
-class PostResource extends JsonResource
+final class PostResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

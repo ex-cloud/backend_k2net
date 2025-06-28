@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests;
 
 use App\Models\Tag;
@@ -7,7 +9,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 
-class UpdateTagRequest extends FormRequest
+final class UpdateTagRequest extends FormRequest
 {
     public function authorize(): bool
     {

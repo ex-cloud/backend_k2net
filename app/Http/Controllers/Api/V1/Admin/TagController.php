@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Api\V1\Admin;
 
 use App\Http\Controllers\Controller;
@@ -11,7 +13,7 @@ use App\Models\Tag;
 use App\Traits\HasSlugAndImage;
 use Str;
 
-class TagController extends Controller
+final class TagController extends Controller
 {
     use HasSlugAndImage;
 

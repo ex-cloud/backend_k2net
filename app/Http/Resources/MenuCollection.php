@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Http\Resources\MenuResource;
 
-class MenuCollection extends ResourceCollection
+final class MenuCollection extends ResourceCollection
 {
     public $status;
     public $message;

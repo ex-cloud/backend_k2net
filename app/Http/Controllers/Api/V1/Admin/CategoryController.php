@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\V1\Admin;
 
@@ -12,7 +13,7 @@ use App\Traits\HasSlugAndImage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
-class CategoryController extends Controller
+final class CategoryController extends Controller
 {
     use HasSlugAndImage;
 

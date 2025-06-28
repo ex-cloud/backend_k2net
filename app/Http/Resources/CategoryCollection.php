@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Http\Resources\CategoryResource;
 
-class CategoryCollection extends ResourceCollection
+final class CategoryCollection extends ResourceCollection
 {
     public $status;
     public $message;

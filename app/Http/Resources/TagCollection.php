@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Http\Resources\TagResource;
 
-class TagCollection extends ResourceCollection
+final class TagCollection extends ResourceCollection
 {
     public $status;
     public $message;

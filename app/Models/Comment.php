@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
-class Comment extends Model
+final class Comment extends Model
 {
     protected $fillable = ['post_id', 'name', 'email', 'comment'];
     protected $casts = [

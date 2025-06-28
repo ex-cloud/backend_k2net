@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Api\V1\Admin;
 
 use App\Http\Controllers\Controller;
@@ -12,7 +14,7 @@ use App\Traits\HasSlugAndImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-class PostController extends Controller
+final class PostController extends Controller
 {
     use HasSlugAndImage;
 
