@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use App\Http\Resources\TagResource;
 
 final class TagCollection extends ResourceCollection
 {
     public $status;
     public $message;
 
-    public function __construct($resource, $status = true, $message = 'Success')
+    public function __construct($resource, bool $status = true, string $message = 'Success')
     {
         parent::__construct($resource);
         $this->status = $status;
@@ -25,11 +24,17 @@ final class TagCollection extends ResourceCollection
             'success' => $this->status,
             'message' => $this->message,
             'data' => TagResource::collection($this->collection),
+        ];
+    }
+
+    public function with($request): array
+    {
+        return [
             'meta' => [
                 'current_page' => $this->currentPage(),
-                'last_page' => $this->lastPage(),
-                'per_page' => $this->perPage(),
-                'total' => $this->total(),
+                'last_page'    => $this->lastPage(),
+                'per_page'     => $this->perPage(),
+                'total'        => $this->total(),
             ],
         ];
     }

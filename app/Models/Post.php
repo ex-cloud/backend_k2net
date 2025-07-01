@@ -14,6 +14,7 @@ final class Post extends Model
         'created_by' => 'integer',
         'updated_by' => 'integer',
         'is_published' => 'boolean',
+        'published_at' => 'datetime',
     ];
 
     public function user()
@@ -46,10 +47,10 @@ final class Post extends Model
         return $this->belongsTo(User::class, 'updated_by');
     }
 
-    protected function image(): Attribute
+    protected function imageUrl(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => url('/storage/posts/' . $value),
+            get: fn($value, $attributes) => $attributes['image'] ? url('/storage/' . ltrim($attributes['image'], '/')) : null,
         );
     }
 
