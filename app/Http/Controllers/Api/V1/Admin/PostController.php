@@ -60,8 +60,6 @@ final class PostController extends Controller
             'is_published' => $request->is_published,
             'category_id' => $request->category_id,
             'author_id'   => auth()->id(),
-            'created_by' => auth()->id(),
-            'updated_by' => auth()->id(),
         ]);
 
         if ($request->filled('tags')) {
